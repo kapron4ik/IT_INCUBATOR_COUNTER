@@ -1,0 +1,15 @@
+.button {
+    width: 82px;
+    height: 36px;
+    background-color: aqua;
+    border-radius: 3px;
+    border-style: none;
+    color: slategrey ;
+    font-weight: bold;
+}
+
+
+
+.button:disabled {
+    background-color: darkgray;
+}
