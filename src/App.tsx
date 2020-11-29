@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import './App.css';
 import Button from "./Component/Button/Button";
-import InputNumber from "./Component/Button/InputNumber";
+import ScreenInput from "./Component/Button/ScreenInput";
+import ScreenIter from "./Component/Button/ScreenIter";
 
 export type FilterValuesType = "enter values and press 'set" | "Incorrect value!"
 
@@ -19,12 +20,8 @@ function App() {
         }
     }
 
-    let maxValue = getLocalStorageObjectItem(keyMaxValue, 10)
-    let minValue = getLocalStorageObjectItem(keyMinValue, 0)
-
-    const [myValue, setMyValue] = useState({
-        start:getLocalStorageObjectItem(keyMinValue, 0),
-        stop:getLocalStorageObjectItem(keyMaxValue, 10)})
+    const [minValue, setMinValue] = useState<number>(getLocalStorageObjectItem(keyMinValue, 0))
+    const [maxValue, setMaxValue] = useState<number>(getLocalStorageObjectItem(keyMaxValue, 10))
     const [value, setValue] = useState<number>(minValue)
     const [editMode, setEditMode] = useState<boolean>(false)
     const [error, setError] = useState<boolean>(false)
@@ -40,7 +37,8 @@ function App() {
     }
 
     function setValueInput() {
-        minValue = getLocalStorageObjectItem(keyMinValue, 0)
+        localStorage.setItem(keyMinValue, JSON.stringify({value: minValue}))
+        localStorage.setItem(keyMaxValue, JSON.stringify({value: maxValue}))
         setValue(minValue)
         setEditMode(false)
     }
@@ -55,62 +53,45 @@ function App() {
         disableSet = () => false
     }
 
-    if (error){
+    if (error) {
         disableReset = () => true
         disableInc = () => true
         disableSet = () => true
     }
 
-    const [errorInput, setErrorInput] = useState({min: false, max: false})
+    function onChangeMinValueHandler(newValue: number) {
+        setMinValue(newValue)
+    }
 
-    function errorHandlerValue() {
-        debugger
-        let maxValue = getLocalStorageObjectItem(keyMaxValue, 10)
-        let minValue = getLocalStorageObjectItem(keyMinValue, 0)
-        setEditMode(true)
-        if (minValue < 0) {
-            setErrorInput({min: true, max: false})
-            setError(true)
-        } else if (maxValue = 0 || maxValue == minValue || maxValue < minValue) {
-            setErrorInput({min: true, max: true})
-            setError(true)
-        } else {
-            setErrorInput({min: false, max: false})
-            setError(false)
-        }
+    function onChangeMaxValueHandler(newValue: number) {
+        setMaxValue(newValue)
     }
 
     return (
         <div className="App">
             <div className="item">
-                <div className="screen">
-                    <InputNumber value={maxValue}
-                                 title="max value:"
-                                 keyLS={keyMaxValue}
-                                 errorHandlerValue={errorHandlerValue}
-                                 errorHandler={errorInput.max}
-                    />
-                    <InputNumber value={minValue}
-                                 title="start value:"
-                                 keyLS={keyMinValue}
-                                 errorHandlerValue={errorHandlerValue}
-                                 errorHandler={errorInput.min}
-                    />
-                </div>
+                < ScreenInput
+                    minValue={minValue}
+                    maxValue={maxValue}
+                    onChangeMinValueHandler={onChangeMinValueHandler}
+                    onChangeMaxValueHandler={onChangeMaxValueHandler}
+                    setEditMode={setEditMode}
+                    setError={setError}/>
                 <div className="panel">
                     < Button
                         title={"set"}
                         isActive={disableSet}
                         onClick={setValueInput}
+
                     />
                 </div>
             </div>
             <div className="item">
-                <div className={value === maxValue ? `screen error` : "screen"}>
-                    <div className={editMode ? `editMode` : ""}>{value}</div>
-                    <div className={editMode && !error ? "" : `editMode`}>Enter values and press 'set'</div>
-                    <div className={editMode && error ? "error" : `editMode`}>Incorrect value!</div>
-                </div>
+                < ScreenIter
+                    value={value}
+                    editMode={editMode}
+                    error={error}
+                    maxValue={maxValue}/>
                 <div className="panel">
                     < Button
                         title={"inc"}

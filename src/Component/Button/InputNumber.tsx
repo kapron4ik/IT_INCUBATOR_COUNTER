@@ -14,7 +14,6 @@ function InputNumber(props: PropsType) {
     const [error, setError] = useState<boolean>(props.errorHandler)
 
     const onChangeValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        debugger
         let newValue = +e.currentTarget.value
         localStorage.setItem(props.keyLS, JSON.stringify({value: newValue}))
         setValue(newValue)

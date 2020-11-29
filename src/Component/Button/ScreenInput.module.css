@@ -1,0 +1,25 @@
+input {
+    width: 60px;
+    border:2px solid aqua;
+    border-radius: 5px;
+    background-color: slategrey ;
+    color: aqua;
+}
+
+.screen div {
+    margin-top: 4px;
+    width: 100%;
+    /*height: 18px;*/
+    display: flex;
+    justify-content: space-around;
+}
+
+.error {
+    /*color: red;*/
+    color: black;
+    border:2px solid red;
+    background-color: lightpink ;
+}
+
+
+
